@@ -1,0 +1,19 @@
+{
+    "name": "TTSLocalizationKit.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:12c6afc62437b6440a5f35997c45833c",
+        "GUID:eec0964c48f6f4e40bc3ec2257ccf8c5",
+        "GUID:69448af7b92c7f342b298e06a37122aa",
+        "GUID:84651a3751eca9349aac36a66bba901b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
