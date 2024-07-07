@@ -5,14 +5,15 @@ using UnityEngine.Localization;
 
 public class TextAndAudioManagerBase : MonoBehaviour
 {
-    public enum GenderSetting
+    public enum VoiceGender
     {
         Male,
-        Female
+        Female,
+        Neutral
     }
 
     [Header("TTS Voice settings")]
-    [SerializeField] GenderSetting gender = GenderSetting.Female;
+    [SerializeField] VoiceGender gender = VoiceGender.Female;
     [SerializeField] string audacityMacro = string.Empty;
 
 
@@ -31,7 +32,7 @@ public class TextAndAudioManagerBase : MonoBehaviour
     public TableReference TextTableReference => textTable.TableReference;
     public TableReference AudioTableReference => audioTable.TableReference;
 
-    public GenderSetting Gender => gender;
+    public VoiceGender Gender => gender;
 
     public string AudacityMacro => audacityMacro;
 

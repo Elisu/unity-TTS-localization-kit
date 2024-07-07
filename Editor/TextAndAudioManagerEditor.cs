@@ -25,7 +25,7 @@ public class TextAndAudioManagerEditor : Editor
         return root;
     }
 
-    private async Task RegenerateAudioClips(TableReference stringTable, TableReference assetTable, GenderSetting gender, string audacityMacro)
+    private async Task RegenerateAudioClips(TableReference stringTable, TableReference assetTable, VoiceGender gender, string audacityMacro)
     {
         try
         {

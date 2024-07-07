@@ -99,12 +99,22 @@ def apply_audacity_macro(input_file, macro_name, tofile, fromfile, eol):
     
     print(f"Applied Audacity macro {macro_name} to {input_file}")
 
+def get_gender_voice(gender):
+    gender = gender.lower()
+    if gender == "male":
+        return texttospeech.SsmlVoiceGender.MALE
+    elif gender == "female":
+        return texttospeech.SsmlVoiceGender.FEMALE
+    else:
+        return texttospeech.SsmlVoiceGender.NEUTRAL
+
 def main():
     parser = argparse.ArgumentParser(description="Google TTS API example script.")
     parser.add_argument("--file", type=str, help="JSON file containing text to synthesize.")
     parser.add_argument("--text", type=str, help="Text to synthesize.")
     parser.add_argument("--key", type=str, help="Key for the text entry.")
     parser.add_argument("--locale", type=str, default="en", help="Locale for the text entry.")
+    parser.add_argument("--gender", type=str, default="female", help="Locale for the text entry.")
     parser.add_argument("--output_dir", type=str, required=True, help="Output directory for audio files.")
     parser.add_argument("--credentials", type=str, required=True, help="Path to Google Cloud service account key JSON file.")
     parser.add_argument("--macro_name", type=str, help="Name of the Audacity macro to apply (optional).")
@@ -132,7 +142,7 @@ def main():
                         # Set the voice parameters
                         voice = texttospeech.VoiceSelectionParams(
                             language_code=locale,
-                            ssml_gender=texttospeech.SsmlVoiceGender.FEMALE
+                            ssml_gender=get_gender_voice(args.gender)
                         )
                         
                         output_file = os.path.join(args.output_dir, locale, f"{entry['key']}_{locale}.mp3")
@@ -144,7 +154,7 @@ def main():
         # Process the single text entry from the command line
         voice = texttospeech.VoiceSelectionParams(
             language_code=args.locale,
-            ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
+            ssml_gender=get_gender_voice(args.gender)
         )
 
         output_file = os.path.join(args.output_dir, locale, f"{args.key}_{args.locale}.mp3")

@@ -16,7 +16,7 @@ using static TextAndAudioManagerBase;
 
 public class TTSGenerator
 {
-    private string pythonScriptPath = "Packages/TTSLocalizationKit/Editor/TTS/google_tts.py";
+    private string pythonScriptPath = "Packages/elisu.tts-localization-kit/Editor/TTS/google_tts.py";
     private string baseOutputDir = "Assets/GeneratedTTS";
 
     [Serializable]
@@ -40,7 +40,7 @@ public class TTSGenerator
     }
 
 
-    public async Task RegenerateAudio(string keyFilePath, TableReference localizedStringTable, TableReference localizedAudioTable, GenderSetting gender, string audacityMacro = "")
+    public async Task RegenerateAudio(string keyFilePath, TableReference localizedStringTable, TableReference localizedAudioTable, VoiceGender gender, string audacityMacro = "")
     {
         var outpurDirPath = Path.Combine(baseOutputDir, localizedAudioTable.TableCollectionName);
         string jsonFilePath = Path.Combine(outpurDirPath, "localization.json");
@@ -102,21 +102,21 @@ public class TTSGenerator
         await WriteAllTextAsync(jsonFilePath, jsonContent);
 
         // Run the TTS script
-        await RunTTSScriptAsync(jsonFilePath, outpurDirPath, keyFilePath, audacityMacro);
+        await RunTTSScriptAsync(jsonFilePath, outpurDirPath, keyFilePath, gender, audacityMacro);
 
         // Add generated audio files to the localized asset table
         await AddAudioFilesToTable(jsonFilePath, outpurDirPath, localizedAudioTable);
     }
 
-    private async Task RunTTSScriptAsync(string inputFilePathRelative, string outputPathRelative, string keyFilePathRelative, string macroName = "")
+    private async Task RunTTSScriptAsync(string inputFilePathRelative, string outputPathRelative, string keyFilePathRelative, VoiceGender gender = VoiceGender.Female, string macroName = "")
     {
         string currentDir = Directory.GetCurrentDirectory();
         string inputFile = Path.Combine(currentDir, inputFilePathRelative);
         string outputDir = Path.Combine(currentDir, outputPathRelative);
         string credentials = Path.Combine(currentDir, keyFilePathRelative);
-        string pythonScript = Path.Combine(currentDir, pythonScriptPath);
+        string pythonScript = Path.GetFullPath(pythonScriptPath);
 
-        string arguments = $"\"{pythonScript}\" --file \"{inputFile}\" --output_dir \"{outputDir}\" --credentials \"{credentials}\"";
+        string arguments = $"\"{pythonScript}\" --file \"{inputFile}\" --gender {gender} --output_dir \"{outputDir}\" --credentials \"{credentials}\"";
 
         if (!string.IsNullOrEmpty(macroName))
         {
