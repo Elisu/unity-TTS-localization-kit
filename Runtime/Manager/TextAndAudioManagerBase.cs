@@ -2,8 +2,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Localization.Tables;
 using UnityEngine.Localization;
+using System;
+using System.Threading.Tasks;
 
-public class TextAndAudioManagerBase : MonoBehaviour
+public abstract class TextAndAudioManagerBase : MonoBehaviour
 {
     public enum VoiceGender
     {
@@ -35,5 +37,7 @@ public class TextAndAudioManagerBase : MonoBehaviour
     public VoiceGender Gender => gender;
 
     public string AudacityMacro => audacityMacro;
+
+    public abstract Task SetEntryAsync(string key, Action<string> onDisplayText = null, bool waitTillAudioDone = true);
 
 }

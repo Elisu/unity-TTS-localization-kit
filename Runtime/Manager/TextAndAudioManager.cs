@@ -50,7 +50,7 @@ public abstract class TextAndAudioManager<T> : TextAndAudioManagerBase where T: 
         localizedAssetTable = audioTable.GetTable();
     }
 
-    public async Task SetEntryAsync(string key, Action<string> onDisplayText = null, bool waitTillAudioDone = true)
+    public override async Task SetEntryAsync(string key, Action<string> onDisplayText = null, bool waitTillAudioDone = true)
     {
         var stringEntry = localizedStringTable.GetEntry(key);
         if (stringEntry == null)
