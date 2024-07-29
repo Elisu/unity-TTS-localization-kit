@@ -16,8 +16,18 @@ using static TextAndAudioManagerBase;
 
 public class TTSGenerator
 {
-    private string pythonScriptPath = "Packages/elisu.tts-localization-kit/Editor/TTS/google_tts.py";
-    private string baseOutputDir = "Assets/GeneratedTTS";
+    public static string DefaultTTSPackagePath { get; set; } = "Packages/elisu.tts-localization-kit";
+
+    private const string PYTHON_SCRIPT = "/Editor/TTS/google_tts.py";
+
+    private readonly string pythonScriptPath;
+    private readonly string baseOutputDir;
+
+    public TTSGenerator(string outputDir = "Assets/GeneratedTTS")
+    {
+        pythonScriptPath = Path.Combine(DefaultTTSPackagePath, PYTHON_SCRIPT);
+        baseOutputDir = outputDir;
+    }
 
     [Serializable]
     public class LocalizationData
