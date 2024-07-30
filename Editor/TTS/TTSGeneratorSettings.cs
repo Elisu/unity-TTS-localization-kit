@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class TTSGeneratorSettings : MonoBehaviour
+namespace Elisu.TTSLocalizationKitEditor
 {
-    [SerializeField] string googleTTSKeyFilePath;
+    public class TTSGeneratorSettings : MonoBehaviour
+    {
+        [SerializeField] string googleTTSKeyFilePath;
 
-    public string GoogleTTSKeyFilePath => googleTTSKeyFilePath;
+        public string GoogleTTSKeyFilePath => googleTTSKeyFilePath;
+    }
+
 }

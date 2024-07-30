@@ -3,63 +3,68 @@ using UnityEditor;
 using UnityEngine.UIElements;
 using System.Threading.Tasks;
 using UnityEngine.Localization.Tables;
-using static TextAndAudioManagerBase;
 using System;
 using System.IO;
+using Elisu.TTSLocalizationKit;
+using static Elisu.TTSLocalizationKit.TextAndAudioManagerBase;
 
-[CustomEditor(typeof(TextAndAudioManager<>), true)]
-public class TextAndAudioManagerEditor : Editor
+namespace Elisu.TTSLocalizationKitEditor
 {
-    public override VisualElement CreateInspectorGUI()
+    [CustomEditor(typeof(TextAndAudioManager<>), true)]
+    public class TextAndAudioManagerEditor : Editor
     {
-        var root = new VisualElement();
-        InspectorElement.FillDefaultInspector(root, serializedObject, this);
-
-        var manager = (TextAndAudioManagerBase)target;
-        var editButton = new Button(async () => await RegenerateAudioClips(manager.TextTableReference, manager.AudioTableReference, manager.Gender, manager.AudacityMacro))
+        public override VisualElement CreateInspectorGUI()
         {
-            text = "Regenerate audio clips"
-        };
+            var root = new VisualElement();
+            InspectorElement.FillDefaultInspector(root, serializedObject, this);
 
-        root.Add(editButton);
-        return root;
-    }
-
-    private async Task RegenerateAudioClips(TableReference stringTable, TableReference assetTable, VoiceGender gender, string audacityMacro)
-    {
-        try
-        {
-            var ttsSettings = FindObjectOfType<TTSGeneratorSettings>();
-
-            if (ttsSettings == null)
+            var manager = (TextAndAudioManagerBase)target;
+            var editButton = new Button(async () => await RegenerateAudioClips(manager.TextTableReference, manager.AudioTableReference, manager.Gender, manager.AudacityMacro))
             {
-                throw new Exception("No TTS Settings found in scene. Generation canceled.");
-            }
+                text = "Regenerate audio clips"
+            };
 
-            if (IsRelativePath(ttsSettings.GoogleTTSKeyFilePath) == false)
-            {
-                throw new Exception($"Please provide a relative path within the project istead of {ttsSettings.GoogleTTSKeyFilePath}");
-            }
-
-            if (File.Exists(ttsSettings.GoogleTTSKeyFilePath) == false)
-            {
-                throw new Exception($"Google key file not found at {ttsSettings.GoogleTTSKeyFilePath}");
-            }
-
-            var tts = new TTSGenerator();
-            await tts.RegenerateAudio(ttsSettings.GoogleTTSKeyFilePath, stringTable, assetTable, gender, audacityMacro);
-        }
-        catch (Exception ex)
-        {
-            UnityEngine.Debug.LogError(ex);
+            root.Add(editButton);
+            return root;
         }
 
+        private async Task RegenerateAudioClips(TableReference stringTable, TableReference assetTable, VoiceGender gender, string audacityMacro)
+        {
+            try
+            {
+                var ttsSettings = FindObjectOfType<TTSGeneratorSettings>();
 
+                if (ttsSettings == null)
+                {
+                    throw new Exception("No TTS Settings found in scene. Generation canceled.");
+                }
+
+                if (IsRelativePath(ttsSettings.GoogleTTSKeyFilePath) == false)
+                {
+                    throw new Exception($"Please provide a relative path within the project istead of {ttsSettings.GoogleTTSKeyFilePath}");
+                }
+
+                if (File.Exists(ttsSettings.GoogleTTSKeyFilePath) == false)
+                {
+                    throw new Exception($"Google key file not found at {ttsSettings.GoogleTTSKeyFilePath}");
+                }
+
+                var tts = new TTSGenerator();
+                await tts.RegenerateAudio(ttsSettings.GoogleTTSKeyFilePath, stringTable, assetTable, gender, audacityMacro);
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogError(ex);
+            }
+
+
+        }
+
+        private static bool IsRelativePath(string path)
+        {
+            // Checks if the path is rooted
+            return !Path.IsPathRooted(path);
+        }
     }
 
-    private static bool IsRelativePath(string path)
-    {
-        // Checks if the path is rooted
-        return !Path.IsPathRooted(path);
-    }
 }

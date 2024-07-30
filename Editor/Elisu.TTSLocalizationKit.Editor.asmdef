@@ -1,6 +1,6 @@
 {
     "name": "TTSLocalizationKit.Editor",
-    "rootNamespace": "",
+    "rootNamespace": "Elisu.TTSLocalizationKitEditor",
     "references": [
         "GUID:12c6afc62437b6440a5f35997c45833c",
         "GUID:eec0964c48f6f4e40bc3ec2257ccf8c5",
