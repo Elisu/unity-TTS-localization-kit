@@ -4,7 +4,7 @@ using UnityEngine.Localization.Tables;
 using UnityEngine.Localization;
 using System;
 using System.Threading.Tasks;
-
+using System.Threading;
 
 namespace Elisu.TTSLocalizationKit
 {
@@ -41,7 +41,7 @@ namespace Elisu.TTSLocalizationKit
 
         public string AudacityMacro => audacityMacro;
 
-        public abstract Task SetEntryAsync(string key, Action<string> onDisplayText = null, bool waitTillAudioDone = true);
+        public abstract Task SetEntryAsync(string key, Action<string> onDisplayText = null, bool waitTillAudioDone = true, CancellationToken cancellationToken = default);
 
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine.AddressableAssets;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 using Elisu.TTSLocalizationKit;
+using System.Threading;
 
 namespace Elisu.TTSLocalizationKitEditor
 {
@@ -53,12 +54,13 @@ namespace Elisu.TTSLocalizationKitEditor
             localizedAssetTable = audioTable.GetTable();
         }
 
-        public override async Task SetEntryAsync(string key, Action<string> onDisplayText = null, bool waitTillAudioDone = true)
+        public override async Task SetEntryAsync(string key, Action<string> onDisplayText = null, bool waitTillAudioDone = true, CancellationToken cancellationToken = default)
         {
             var stringEntry = localizedStringTable.GetEntry(key);
             if (stringEntry == null)
             {
                 Debug.LogError($"Key {key} not found in the localization table {localizedStringTable.name}");
+                return;
             }
 
             var localizedString = stringEntry.GetLocalizedString();
@@ -66,9 +68,7 @@ namespace Elisu.TTSLocalizationKitEditor
             if (textUI != null)
                 textUI.text = localizedString;
 
-            if (onDisplayText != null)
-                onDisplayText.Invoke(localizedString);
-
+            onDisplayText?.Invoke(localizedString);
 
             // Get the corresponding localized audio clip entry
             var audioEntry = localizedAssetTable.GetEntry(key);
@@ -80,7 +80,18 @@ namespace Elisu.TTSLocalizationKitEditor
 
             // Load the localized audio clip asynchronously using Addressables
             var handle = Addressables.LoadAssetAsync<AudioClip>(audioEntry.LocalizedValue);
-            AudioClip audioClip = await handle.Task;
+            AudioClip audioClip;
+            try
+            {
+                audioClip = await handle.Task.ConfigureAwait(false);
+            }
+            catch (TaskCanceledException)
+            {
+                Debug.LogWarning($"Loading audio clip for key {key} was cancelled");
+                return;
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
 
             if (audioClip == null)
             {
@@ -91,9 +102,17 @@ namespace Elisu.TTSLocalizationKitEditor
             audioSource.clip = audioClip;
             audioSource.Play();
 
-            // Wait for the duration of the audio clip
             if (waitTillAudioDone)
-                await Task.Delay(TimeSpan.FromSeconds(audioClip.length));
+            {
+                try
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(audioClip.length), cancellationToken);
+                }
+                catch (TaskCanceledException)
+                {
+                    Debug.LogWarning($"Waiting for audio clip for key {key} was cancelled");
+                }
+            }
 
             // Release the addressable asset
             Addressables.Release(handle);
