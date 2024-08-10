@@ -83,7 +83,7 @@ namespace Elisu.TTSLocalizationKitEditor
             AudioClip audioClip;
             try
             {
-                audioClip = await handle.Task.ConfigureAwait(false);
+                audioClip = await handle.Task;
             }
             catch (TaskCanceledException)
             {
