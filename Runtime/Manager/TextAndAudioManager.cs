@@ -6,7 +6,7 @@ using Debug = UnityEngine.Debug;
 using Elisu.TTSLocalizationKit;
 using System.Threading;
 
-namespace Elisu.TTSLocalizationKitEditor
+namespace Elisu.TTSLocalizationKit
 {
     [RequireComponent(typeof(AudioSource))]
     public abstract class TextAndAudioManager<T> : TextAndAudioManagerBase where T : TextAndAudioManager<T>
