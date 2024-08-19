@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using UnityEngine.AddressableAssets;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
-using Elisu.TTSLocalizationKit;
 using System.Threading;
 
 namespace Elisu.TTSLocalizationKit
