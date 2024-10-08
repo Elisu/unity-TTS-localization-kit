@@ -55,6 +55,12 @@ namespace Elisu.TTSLocalizationKit
 
         public override async Task SetEntryAsync(string key, Action<string> onDisplayText = null, bool waitTillAudioDone = true, CancellationToken cancellationToken = default)
         {
+            if (localizedStringTable == null || localizedAssetTable == null)
+            {
+                Debug.LogWarning("Localization tables are not loaded, realoading initiated");
+                LoadTables();
+            }
+
             var stringEntry = localizedStringTable.GetEntry(key);
             if (stringEntry == null)
             {
