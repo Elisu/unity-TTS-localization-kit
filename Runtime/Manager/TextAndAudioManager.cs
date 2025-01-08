@@ -61,6 +61,12 @@ namespace Elisu.TTSLocalizationKit
                 LoadTables();
             }
 
+            // Change whether locale has not changed, and reload if it has
+            if (localizedStringTable.TableReference.LocaleIdentifier != LocalizationSettings.SelectedLocale.Identifier)
+            {
+                LoadTables();
+            }
+
             var stringEntry = localizedStringTable.GetEntry(key);
             if (stringEntry == null)
             {
