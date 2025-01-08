@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using UnityEngine.AddressableAssets;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 using Debug = UnityEngine.Debug;
 using System.Threading;
 
@@ -62,7 +63,7 @@ namespace Elisu.TTSLocalizationKit
             }
 
             // Change whether locale has not changed, and reload if it has
-            if (localizedStringTable.TableReference.LocaleIdentifier != LocalizationSettings.SelectedLocale.Identifier)
+            if (localizedStringTable.LocaleIdentifier != LocalizationSettings.SelectedLocale.Identifier)
             {
                 LoadTables();
             }
